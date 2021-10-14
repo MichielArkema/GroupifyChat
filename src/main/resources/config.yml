@@ -1,0 +1,43 @@
+
+max-group-members: 5
+#allow anyone to use the plugin.
+allow-players: false
+#maximum number of groups a user can create.
+max-user-groups: 1
+group-invitation-lifetime: 30
+
+#event messages.
+event-messages:
+  group-creation-success: "You've successfully created a new group called %group%."
+  group-deleted: "The group '%group%' has been deleted."
+  group-invite-sent: "You've invited %target% to join group %group%."
+  group-invite-received: "You've received a group invitation from %sender% to join the group %group%."
+  group-invite-denied: "You've denied to group request from %sender%."
+  group-invite-notaccepted: "%target% has not accepted the group request."
+  group-member-joined: "%member% has joined the group."
+  group-member-leave: "%member% decided to leave the group."
+  group-member-left: "You've left the group %group%."
+  group-member-kicked: "%member% has been kicked from the group by %executor%"
+  group-member-promoted: "%member% has been promoted to group admin."
+  group-full: "The group is full."
+  group-focus: "You are now focused on group %group%."
+  group-unfocus: "You are now unfocused from group %group%.."
+
+#help messages.
+help-messages:
+  group-create: "Usage: /gc create <groupname> <description> - create a new group."
+  group-delete: "Usage: /gc delete <groupname> - delete a group that you own."
+  group-leave: "Usage: /gc leave <groupname> - Leave a group you're in."
+  group-invite: "Usage: /gc invite <player> - Invite a player to your current focused group."
+  group-accept: "Usage: /gc accept - Accept the latest group invitation."
+  group-promote: "Usage: /gc promote <player> - Promote a player to an admin inside your group."
+  group-focus: "Usage: /gc focus <groupname> - Focus yourself on a group."
+  group-unfocus: "Usage: /gc unfocus - Unfocus yourself from the group you are focused to."
+
+#error messages.
+error-messages:
+  not-allowed: "&cYou are not allowed to use this command."
+  group-already-exists: "&cThe group '%group%' already exists."
+  group-not-exists: "&cThe group '%group%' does not exists."
+  cannot-create-group: "&cYou are not allowed to create groups."
+  cannot-delete-group: "&cYou are not allowed to delete the group '%group%'"

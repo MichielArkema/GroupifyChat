@@ -1,0 +1,28 @@
+name: GroupifyChat
+version: '${project.version}'
+main: nl.michielarkema.groupifychat.GroupifyChat
+api-version: 1.17
+prefix: GroupifyChat
+author: Michiel Arkema
+description: Allows the creation of chat groups for people to talk in private.
+website: michielarkema.nl
+
+commands:
+  gc:
+    usage: /gc - See list of command arguments.
+    description: The groupchat command.
+    aliases: [groupchat]
+
+permissions:
+  groupchat.create:
+    description: Allows a group to be created.
+    default: op
+  groupchat.delete:
+    description: Allows a group to be deleted.
+    default: op
+  groupchat.*:
+    description: Wilcard permission.
+    default: op
+    children:
+      groupchat.create: true
+      groupchat.delete: true
