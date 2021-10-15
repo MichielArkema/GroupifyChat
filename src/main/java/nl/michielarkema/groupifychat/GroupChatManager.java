@@ -9,15 +9,15 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public final class GroupChatManager {
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private File dataFile;
+
     private HashSet<GroupChat> chatGroups = new HashSet<>();
+
 
     public boolean createGroup(String name, String description, UUID creatorUUID) {
         if(this.hasGroup(name))
@@ -53,6 +53,8 @@ public final class GroupChatManager {
         }
         return player.isOp() || player.hasPermission(permission);
     }
+
+
 
     public void loadData() {
         try

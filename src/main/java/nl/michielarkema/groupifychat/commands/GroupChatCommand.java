@@ -3,7 +3,6 @@ package nl.michielarkema.groupifychat.commands;
 import nl.michielarkema.groupifychat.GroupChatPermissions;
 import nl.michielarkema.groupifychat.GroupifyChat;
 import nl.michielarkema.groupifychat.objects.GroupChat;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -143,6 +142,9 @@ public final class GroupChatCommand implements CommandExecutor {
     private void unFocusGroup(Player player) {
     }
 
+    private void listGroups(Player player) {
+    }
+
     private void showHelp(Player player) {
 
         helpMessages.getValues(false).forEach((x, message) -> {
@@ -172,8 +174,13 @@ public final class GroupChatCommand implements CommandExecutor {
                 break;
             case "focus":
                 this.focusGroup(player, args);
+                break;
             case "unfocus":
                 this.unFocusGroup(player);
+                break;
+            case "list":
+                this.listGroups(player);
+                break;
             default:
                 player.sendMessage("Invalid command usage!");
                 this.showHelp(player);

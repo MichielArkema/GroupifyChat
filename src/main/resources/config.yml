@@ -4,7 +4,6 @@ max-group-members: 5
 allow-players: false
 #maximum number of groups a user can create.
 max-user-groups: 1
-group-invitation-lifetime: 30
 
 #event messages.
 event-messages:

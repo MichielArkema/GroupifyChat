@@ -11,10 +11,7 @@ public final class GroupifyChat extends JavaPlugin {
 
     public FileConfiguration Config;
     private GroupChatManager chatGroupsManager;
-
-    public static GroupifyChat getInstance() {
-        return instance;
-    }
+    private GroupInvitationManager groupInvitationManager;
 
 
     public static String translateColor(String s){
@@ -30,6 +27,8 @@ public final class GroupifyChat extends JavaPlugin {
         this.chatGroupsManager = new GroupChatManager();
         this.chatGroupsManager.loadData();
 
+        this.groupInvitationManager = new GroupInvitationManager();
+
         this.getServer().getPluginManager().registerEvents(new Events(), this);
 
         this.getCommand("gc").setExecutor(new GroupChatCommand(this));
@@ -41,5 +40,12 @@ public final class GroupifyChat extends JavaPlugin {
 
     public GroupChatManager getChatGroupsManager() {
         return chatGroupsManager;
+    }
+    public GroupInvitationManager getGroupInvitationManager() {
+        return groupInvitationManager;
+    }
+
+    public static GroupifyChat getInstance() {
+        return instance;
     }
 }
