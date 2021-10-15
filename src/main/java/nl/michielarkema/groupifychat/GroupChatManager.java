@@ -47,7 +47,7 @@ public final class GroupChatManager {
         return this.chatGroups.stream().anyMatch(x -> x.Settings.Name.equals(name));
     }
 
-    public boolean hasAccessTo(final Player player, final String permission) {
+    public boolean hasAccessTo(Player player, String permission) {
         if(GroupifyChat.getInstance().getConfig().getBoolean("allow-players")) {
             return true;
         }

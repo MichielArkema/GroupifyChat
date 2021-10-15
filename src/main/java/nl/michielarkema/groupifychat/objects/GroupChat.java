@@ -1,6 +1,7 @@
 package nl.michielarkema.groupifychat.objects;
 
 import nl.michielarkema.groupifychat.GroupifyChat;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -23,9 +24,11 @@ public final class GroupChat {
     }
 
     public void addMember(UUID memberUUID) {
-        if(this.hasMember(memberUUID))
-            return;
         this.Members.add(memberUUID);
+    }
+
+    public boolean removeMember(UUID memberUUID) {
+        return this.Members.remove(memberUUID);
     }
 
     public boolean canModify(Player player) {
@@ -34,15 +37,23 @@ public final class GroupChat {
                 //|| GroupifyChat.getInstance().getChatGroupsManager().canDelete(this, player);
     }
 
+    public void sendGroupMessage(String message) {
+
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if(this.hasMember(onlinePlayer.getUniqueId())) {
+                onlinePlayer.sendMessage(message);
+            }
+        }
+    }
+
     public boolean isOwner(UUID playerID) {
-        return this.Settings.MasterAdminUUID == playerID;
+        return this.Settings.MasterAdminUUID.equals(playerID);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(this.Settings.Name);
     }
-
 
 }
 

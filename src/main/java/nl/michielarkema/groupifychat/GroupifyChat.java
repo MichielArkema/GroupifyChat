@@ -9,7 +9,7 @@ public final class GroupifyChat extends JavaPlugin {
 
     private static GroupifyChat instance;
 
-    public FileConfiguration Config = this.getConfig();
+    public FileConfiguration Config;
     private GroupChatManager chatGroupsManager;
 
     public static GroupifyChat getInstance() {
@@ -25,6 +25,8 @@ public final class GroupifyChat extends JavaPlugin {
     public void onEnable() {
         instance = this;
         this.saveDefaultConfig();
+        this.Config = this.getConfig();
+
         this.chatGroupsManager = new GroupChatManager();
         this.chatGroupsManager.loadData();
 

@@ -45,37 +45,6 @@ public final class GroupChatCommand implements CommandExecutor {
         return true;
     }
 
-    private void handleArguments(String[] args, Player player) {
-        switch (args[0]) {
-            case "create":
-                this.groupCreate(player, args);
-                break;
-            case "invite":
-                this.inviteGroup(player, args);
-                break;
-            case "accept":
-                this.acceptGroup(player, args);
-                break;
-            case "delete":
-                this.deleteGroup(player, args);
-                break;
-            case "leave":
-                this.leaveGroup(player, args);
-                break;
-            case "promote":
-                this.promoteMember(player, args);
-                break;
-            case "focus":
-                this.focusGroup(player, args);
-            case "unfocus":
-                this.unFocusGroup(player);
-            default:
-                player.sendMessage("Invalid command usage!");
-                this.showHelp(player);
-                break;
-        }
-    }
-
     private void groupCreate(Player player, String[] args) {
 
         if(!this.plugin.getChatGroupsManager().hasAccessTo(player, GroupChatPermissions.GROUPCHAT_CREATE)) {
@@ -130,9 +99,36 @@ public final class GroupChatCommand implements CommandExecutor {
     }
 
     private void leaveGroup(Player player, String[] args) {
+        if(args.length < 2) {
+            player.sendMessage(GroupifyChat.translateColor(this.helpMessages.getString("group-leave")));
+            return;
+        }
+        String groupName = args[1];
+        GroupChat groupChat = this.plugin.getChatGroupsManager().getGroup(groupName);
+        if(groupChat == null) {
+            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("group-not-exists")
+                    .replace("%group%", groupName)));
+            return;
+        }
+        if(!groupChat.hasMember(player.getUniqueId())) {
+            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("not-in-group")
+                    .replace("%group%", groupName)));
+            return;
+        }
+        if(groupChat.isOwner(player.getUniqueId())) {
+            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("cannot-leave-group-due-ownership")
+                    .replace("%group%", groupName)));
+            return;
+        }
+        this.plugin.getChatGroupsManager().removeGroup(groupName);
+        player.sendMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-member-left")
+                .replace("%group%", groupName)));
+        groupChat.sendGroupMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-member-leave")
+                .replace("%member%", player.getDisplayName())));
     }
 
     private void inviteGroup(Player player, String[] args) {
+
     }
 
     private void acceptGroup(Player player, String[] args) {
@@ -152,6 +148,37 @@ public final class GroupChatCommand implements CommandExecutor {
         helpMessages.getValues(false).forEach((x, message) -> {
             player.sendMessage(message.toString());
         });
+    }
+
+    private void handleArguments(String[] args, Player player) {
+        switch (args[0]) {
+            case "create":
+                this.groupCreate(player, args);
+                break;
+            case "invite":
+                this.inviteGroup(player, args);
+                break;
+            case "accept":
+                this.acceptGroup(player, args);
+                break;
+            case "delete":
+                this.deleteGroup(player, args);
+                break;
+            case "leave":
+                this.leaveGroup(player, args);
+                break;
+            case "promote":
+                this.promoteMember(player, args);
+                break;
+            case "focus":
+                this.focusGroup(player, args);
+            case "unfocus":
+                this.unFocusGroup(player);
+            default:
+                player.sendMessage("Invalid command usage!");
+                this.showHelp(player);
+                break;
+        }
     }
 }
 

@@ -39,5 +39,7 @@ error-messages:
   not-allowed: "&cYou are not allowed to use this command."
   group-already-exists: "&cThe group '%group%' already exists."
   group-not-exists: "&cThe group '%group%' does not exists."
+  not-in-group: "You are not a member of group %group%"
   cannot-create-group: "&cYou are not allowed to create groups."
   cannot-delete-group: "&cYou are not allowed to delete the group '%group%'"
+  cannot-leave-group-due-ownership: "You cannot leave a group that you own. Use the '/gc disband %group%' instead."
