@@ -42,3 +42,5 @@ error-messages:
   cannot-create-group: "&cYou are not allowed to create groups."
   cannot-delete-group: "&cYou are not allowed to delete the group '%group%'"
   cannot-leave-group-due-ownership: "You cannot leave a group that you own. Use the '/gc disband %group%' instead."
+  not-focused: "&cYou are not focused on any group."
+  player-not-found: "&cCouldn't find the target user."

@@ -10,9 +10,10 @@ public final class GroupifyChat extends JavaPlugin {
     private static GroupifyChat instance;
 
     public FileConfiguration Config;
+
     private GroupChatManager chatGroupsManager;
     private GroupInvitationManager groupInvitationManager;
-
+    private GroupFocusManager groupFocusManager;
 
     public static String translateColor(String s){
         return ChatColor.translateAlternateColorCodes('&', s);
@@ -43,6 +44,9 @@ public final class GroupifyChat extends JavaPlugin {
     }
     public GroupInvitationManager getGroupInvitationManager() {
         return groupInvitationManager;
+    }
+    public GroupFocusManager getGroupFocusManager() {
+        return groupFocusManager;
     }
 
     public static GroupifyChat getInstance() {

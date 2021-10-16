@@ -18,7 +18,6 @@ public final class GroupChatManager {
 
     private HashSet<GroupChat> chatGroups = new HashSet<>();
 
-
     public boolean createGroup(String name, String description, UUID creatorUUID) {
         if(this.hasGroup(name))
             return false;

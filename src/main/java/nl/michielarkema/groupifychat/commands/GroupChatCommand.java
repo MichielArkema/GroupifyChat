@@ -3,6 +3,7 @@ package nl.michielarkema.groupifychat.commands;
 import nl.michielarkema.groupifychat.GroupChatPermissions;
 import nl.michielarkema.groupifychat.GroupifyChat;
 import nl.michielarkema.groupifychat.objects.GroupChat;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -127,7 +128,27 @@ public final class GroupChatCommand implements CommandExecutor {
     }
 
     private void inviteGroup(Player player, String[] args) {
+        if(args.length < 2) {
+            player.sendMessage(GroupifyChat.translateColor(this.helpMessages.getString("group-invite")));
+            return;
+        }
+        GroupChat groupChat = this.plugin.getGroupFocusManager().getFocusedGroupChat(player.getUniqueId());
+        if(groupChat == null) {
+            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("not-focused")));
+            return;
+        }
 
+        Player target = Bukkit.getPlayer(args[1]);
+        if(target == null) {
+            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("player-not-found")));
+            return;
+        }
+
+        if(this.plugin.getGroupInvitationManager().hasInvitation(target.getUniqueId())) {
+            //Todo: Send a message that the target player already has incoming invitation.
+            return;
+        }
+        //Todo: Handle the group invitation code.
     }
 
     private void acceptGroup(Player player, String[] args) {
