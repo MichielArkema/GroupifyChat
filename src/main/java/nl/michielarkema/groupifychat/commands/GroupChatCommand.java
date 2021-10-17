@@ -143,12 +143,22 @@ public final class GroupChatCommand implements CommandExecutor {
             player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("player-not-found")));
             return;
         }
+        if(target.getUniqueId().equals(player.getUniqueId()))
+            return;
 
         if(this.plugin.getGroupInvitationManager().hasInvitation(target.getUniqueId())) {
             //Todo: Send a message that the target player already has incoming invitation.
+            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("player-has-invitation")
+                    .replace("%group%", target.getDisplayName())));
             return;
         }
         //Todo: Handle the group invitation code.
+        player.sendMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-invite-sent")
+                .replace("%target%", target.getDisplayName())
+                .replace("%group%", groupChat.Settings.Name)));
+
+        target.sendMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-invite-received")));
+        this.plugin.getGroupInvitationManager().addInvitation(target.getUniqueId(), groupChat.Settings.Name);
     }
 
     private void acceptGroup(Player player, String[] args) {

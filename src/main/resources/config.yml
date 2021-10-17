@@ -44,3 +44,4 @@ error-messages:
   cannot-leave-group-due-ownership: "You cannot leave a group that you own. Use the '/gc disband %group%' instead."
   not-focused: "&cYou are not focused on any group."
   player-not-found: "&cCouldn't find the target user."
+  player-has-invitation: "&c%player% already has a incoming invitation."
