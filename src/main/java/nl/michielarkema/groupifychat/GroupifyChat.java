@@ -28,7 +28,7 @@ public final class GroupifyChat extends JavaPlugin {
         this.chatGroupsManager = new GroupChatManager();
         this.chatGroupsManager.loadData();
 
-        this.groupInvitationManager = new GroupInvitationManager();
+        this.groupInvitationManager = new GroupInvitationManager(this);
 
         this.getServer().getPluginManager().registerEvents(new Events(), this);
 
