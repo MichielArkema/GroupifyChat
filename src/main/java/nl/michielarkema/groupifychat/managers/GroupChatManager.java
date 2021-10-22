@@ -19,7 +19,6 @@ import java.util.*;
 public final class GroupChatManager {
 
     private final GroupifyChat plugin;
-    private final FileConfiguration config;
     private final GroupAdministrationManager groupAdministrationManager;
 
     private final ConfigurationSection eventMessages;
@@ -37,12 +36,12 @@ public final class GroupChatManager {
 
     public GroupChatManager(GroupifyChat plugin) {
         this.plugin = plugin;
-        this.config = plugin.getConfig();
+        FileConfiguration config = plugin.getConfig();
         this.groupAdministrationManager = new GroupAdministrationManager(this.plugin, this);
 
-        this.eventMessages = this.config.getConfigurationSection("event-messages");
-        this.helpMessages = this.config.getConfigurationSection("help-messages");
-        this.errorMessages = this.config.getConfigurationSection("error-messages");
+        this.eventMessages = config.getConfigurationSection("event-messages");
+        this.helpMessages = config.getConfigurationSection("help-messages");
+        this.errorMessages = config.getConfigurationSection("error-messages");
     }
 
     public boolean createGroup(String name, String description, UUID creatorUUID) {
@@ -124,11 +123,11 @@ public final class GroupChatManager {
         String groupDescription = args[2];
         boolean created = this.plugin.getChatGroupsManager().createGroup(groupName, groupDescription, player.getUniqueId());
         if(!created) {
-            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("group-already-exists")
+            player.sendMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.errorMessages.getString("group-already-exists"))
                     .replace("%group%", groupName)));
             return;
         }
-        player.sendMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-creation-success")
+        player.sendMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.eventMessages.getString("group-creation-success"))
                 .replace("%group%", groupName)));
         //Todo: Perhaps auto focus the player.
     }
@@ -147,17 +146,17 @@ public final class GroupChatManager {
         GroupChat groupChat = this.plugin.getChatGroupsManager().getGroup(groupName);
         if(groupChat == null)
         {
-            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("group-not-exists")
+            player.sendMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.errorMessages.getString("group-not-exists"))
                     .replace("%group%", groupName)));
             return;
         }
         if(!groupChat.canModify(player)) {
-            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("cannot-delete-group")
+            player.sendMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.errorMessages.getString("cannot-delete-group"))
                     .replace("%group%", groupName)));
             return;
         }
         this.plugin.getChatGroupsManager().removeGroup(groupName);
-        player.sendMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-deleted")
+        player.sendMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.eventMessages.getString("group-deleted"))
                 .replace("%group%", groupName)));
     }
 
@@ -169,24 +168,24 @@ public final class GroupChatManager {
         String groupName = args[1];
         GroupChat groupChat = this.plugin.getChatGroupsManager().getGroup(groupName);
         if(groupChat == null) {
-            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("group-not-exists")
+            player.sendMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.errorMessages.getString("group-not-exists"))
                     .replace("%group%", groupName)));
             return;
         }
         if(!groupChat.hasMember(player.getUniqueId())) {
-            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("not-in-group")
+            player.sendMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.errorMessages.getString("not-in-group"))
                     .replace("%group%", groupName)));
             return;
         }
         if(groupChat.isOwner(player.getUniqueId())) {
-            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("cannot-leave-group-due-ownership")
+            player.sendMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.errorMessages.getString("cannot-leave-group-due-ownership"))
                     .replace("%group%", groupName)));
             return;
         }
         this.plugin.getChatGroupsManager().removeGroup(groupName);
-        player.sendMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-member-left")
+        player.sendMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.eventMessages.getString("group-member-left"))
                 .replace("%group%", groupName)));
-        groupChat.sendGroupMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-member-leave")
+        groupChat.sendGroupMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.eventMessages.getString("group-member-leave"))
                 .replace("%member%", player.getDisplayName())));
     }
 

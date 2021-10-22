@@ -6,6 +6,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Objects;
+
 public final class GroupifyChat extends JavaPlugin {
 
     private static GroupifyChat instance;
@@ -33,9 +35,9 @@ public final class GroupifyChat extends JavaPlugin {
 
         this.groupFocusManager = new GroupFocusManager(this);
 
-        this.getServer().getPluginManager().registerEvents(new Events(), this);
+        this.getServer().getPluginManager().registerEvents(new EventListener(this), this);
 
-        this.getCommand("gc").setExecutor(new GroupChatCommand(this));
+        Objects.requireNonNull(this.getCommand("gc")).setExecutor(new GroupChatCommand(this));
     }
     @Override
     public void onDisable() {

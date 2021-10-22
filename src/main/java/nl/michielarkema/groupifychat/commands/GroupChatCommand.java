@@ -14,20 +14,17 @@ import org.bukkit.entity.Player;
 public final class GroupChatCommand implements CommandExecutor {
 
     private final GroupifyChat plugin;
-    private final FileConfiguration config;
 
-    private final ConfigurationSection eventMessages;
     private final ConfigurationSection helpMessages;
     private final ConfigurationSection errorMessages;
 
     public GroupChatCommand(GroupifyChat plugin)
     {
         this.plugin = plugin;
-        this.config = plugin.getConfig();
+        FileConfiguration config = plugin.getConfig();
 
-        this.eventMessages = this.config.getConfigurationSection("event-messages");
-        this.helpMessages = this.config.getConfigurationSection("help-messages");
-        this.errorMessages = this.config.getConfigurationSection("error-messages");
+        this.helpMessages = config.getConfigurationSection("help-messages");
+        this.errorMessages = config.getConfigurationSection("error-messages");
     }
 
     @Override
@@ -47,9 +44,8 @@ public final class GroupChatCommand implements CommandExecutor {
 
     private void showHelp(Player player) {
 
-        helpMessages.getValues(false).forEach((x, message) -> {
-            player.sendMessage(message.toString());
-        });
+        helpMessages.getValues(false).forEach((x, message)
+                -> player.sendMessage(message.toString()));
     }
 
     private void handleArguments(String[] args, Player player) {

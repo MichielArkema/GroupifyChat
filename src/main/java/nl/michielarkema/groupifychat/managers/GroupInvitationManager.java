@@ -9,12 +9,12 @@ import org.bukkit.entity.Player;
 
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public final class GroupInvitationManager {
 
     private final GroupifyChat plugin;
-    private final FileConfiguration config;
 
     private final ConfigurationSection eventMessages;
     private final ConfigurationSection helpMessages;
@@ -24,11 +24,11 @@ public final class GroupInvitationManager {
 
     public GroupInvitationManager(GroupifyChat plugin) {
         this.plugin = plugin;
-        this.config = plugin.getConfig();
+        FileConfiguration config = plugin.getConfig();
 
-        this.eventMessages = this.config.getConfigurationSection("event-messages");
-        this.helpMessages = this.config.getConfigurationSection("help-messages");
-        this.errorMessages = this.config.getConfigurationSection("error-messages");
+        this.eventMessages = config.getConfigurationSection("event-messages");
+        this.helpMessages = config.getConfigurationSection("help-messages");
+        this.errorMessages = config.getConfigurationSection("error-messages");
     }
 
 
@@ -69,12 +69,12 @@ public final class GroupInvitationManager {
 
         if(this.plugin.getGroupInvitationManager().hasInvitation(target.getUniqueId())) {
             //Todo: Send a message that the target player already has incoming invitation.
-            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("player-has-invitation")
+            player.sendMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.errorMessages.getString("player-has-invitation"))
                     .replace("%group%", target.getDisplayName())));
             return;
         }
         //Todo: Handle the group invitation code.
-        player.sendMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-invite-sent")
+        player.sendMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.eventMessages.getString("group-invite-sent"))
                 .replace("%target%", target.getDisplayName())
                 .replace("%group%", groupChat.Settings.Name)));
 
@@ -89,7 +89,7 @@ public final class GroupInvitationManager {
         }
         UUID id = player.getUniqueId();
         GroupChat groupChat = this.plugin.getChatGroupsManager().getGroup(this.groupInvitations.get(id));
-        groupChat.sendGroupMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-member-joined")
+        groupChat.sendGroupMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.eventMessages.getString("group-member-joined"))
                 .replace("%member%", player.getDisplayName())));
         groupChat.addMember(id);
         this.groupInvitations.remove(id);
