@@ -8,13 +8,13 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public final class GroupFocusManager {
 
     private final GroupifyChat plugin;
-    private final FileConfiguration config;
-    private final Map<UUID, String> focusedMap = new HashMap<UUID, String>();
+    private final Map<UUID, String> focusedMap = new HashMap<>();
 
     private final ConfigurationSection eventMessages;
     private final ConfigurationSection helpMessages;
@@ -22,11 +22,11 @@ public final class GroupFocusManager {
 
     public GroupFocusManager(GroupifyChat plugin) {
         this.plugin = plugin;
-        this.config = plugin.getConfig();
+        FileConfiguration config = plugin.getConfig();
 
-        this.eventMessages = this.config.getConfigurationSection("event-messages");
-        this.helpMessages = this.config.getConfigurationSection("help-messages");
-        this.errorMessages = this.config.getConfigurationSection("error-messages");
+        this.eventMessages = config.getConfigurationSection("event-messages");
+        this.helpMessages = config.getConfigurationSection("help-messages");
+        this.errorMessages = config.getConfigurationSection("error-messages");
     }
 
     public void focusGroup(UUID playerId, String groupName) {
@@ -66,7 +66,7 @@ public final class GroupFocusManager {
             return;
         }
         this.focusedMap.put(id, groupName);
-        player.sendMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-focused")
+        player.sendMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.eventMessages.getString("group-focused"))
                 .replace("%group%", groupName)));
     }
     public void handleUnFocusCommand(Player player) {
@@ -77,7 +77,7 @@ public final class GroupFocusManager {
         }
         String groupName = focusedMap.get(id);
         focusedMap.remove(id);
-        player.sendMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-unfocused")
+        player.sendMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.eventMessages.getString("group-unfocused"))
                 .replace("%group%", groupName)));
     }
 }
