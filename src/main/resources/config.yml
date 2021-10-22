@@ -20,7 +20,7 @@ event-messages:
   group-member-promoted: "%member% has been promoted to group admin."
   group-full: "The group is full."
   group-focused: "You are now focused on group %group%."
-  group-unfocus: "You are now unfocused from group %group%.."
+  group-unfocused: "You are now unfocused from group %group%.."
 
 #help messages.
 help-messages:

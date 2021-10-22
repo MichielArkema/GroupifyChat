@@ -70,6 +70,14 @@ public final class GroupFocusManager {
                 .replace("%group%", groupName)));
     }
     public void handleUnFocusCommand(Player player) {
-
+        UUID id = player.getUniqueId();
+        if(!focusedMap.containsKey(id)) {
+            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("not-focused")));
+            return;
+        }
+        String groupName = focusedMap.get(id);
+        focusedMap.remove(id);
+        player.sendMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-unfocused")
+                .replace("%group%", groupName)));
     }
 }
