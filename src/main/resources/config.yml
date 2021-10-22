@@ -19,7 +19,7 @@ event-messages:
   group-member-kicked: "%member% has been kicked from the group by %executor%"
   group-member-promoted: "%member% has been promoted to group admin."
   group-full: "The group is full."
-  group-focus: "You are now focused on group %group%."
+  group-focused: "You are now focused on group %group%."
   group-unfocus: "You are now unfocused from group %group%.."
 
 #help messages.
@@ -29,19 +29,21 @@ help-messages:
   group-leave: "Usage: /gc leave <groupname> - Leave a group you're in."
   group-invite: "Usage: /gc invite <player> - Invite a player to your current focused group."
   group-accept: "Usage: /gc accept - Accept the latest group invitation."
-  group-promote: "Usage: /gc promote <player> - Promote a player to an admin inside your group."
   group-focus: "Usage: /gc focus <groupname> - Focus yourself on a group."
   group-unfocus: "Usage: /gc unfocus - Unfocus yourself from the group you are focused to."
+  group-list: "Usage: /gc list - Shows the list of groups you're in."
 
 #error messages.
 error-messages:
+  invalid-command-usage: "&cInvalid command usage!"
   not-allowed: "&cYou are not allowed to use this command."
   group-already-exists: "&cThe group '%group%' already exists."
   group-not-exists: "&cThe group '%group%' does not exists."
-  not-in-group: "You are not a member of group %group%"
+  not-in-group: "&cYou are not a member of this group!"
   cannot-create-group: "&cYou are not allowed to create groups."
   cannot-delete-group: "&cYou are not allowed to delete the group '%group%'"
   cannot-leave-group-due-ownership: "You cannot leave a group that you own. Use the '/gc disband %group%' instead."
   not-focused: "&cYou are not focused on any group."
   player-not-found: "&cCouldn't find the target user."
   player-has-invitation: "&c%player% already has a incoming invitation."
+  no-incoming-invitation: "&cYou don't have any incoming invitation."

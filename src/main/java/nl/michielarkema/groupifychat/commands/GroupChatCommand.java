@@ -1,8 +1,6 @@
 package nl.michielarkema.groupifychat.commands;
 
-import nl.michielarkema.groupifychat.GroupChatPermissions;
 import nl.michielarkema.groupifychat.GroupifyChat;
-import nl.michielarkema.groupifychat.objects.GroupChat;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -44,103 +42,6 @@ public final class GroupChatCommand implements CommandExecutor {
         return true;
     }
 
-    private void groupCreate(Player player, String[] args) {
-
-        if(!this.plugin.getChatGroupsManager().hasAccessTo(player, GroupChatPermissions.GROUPCHAT_CREATE)) {
-            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("cannot-create-group")));
-            return;
-        }
-
-        if(args.length < 3){
-            player.sendMessage(GroupifyChat.translateColor(this.helpMessages.getString("group-create")));
-            return;
-        }
-        String groupName = args[1];
-        String groupDescription = args[2];
-        boolean created = this.plugin.getChatGroupsManager().createGroup(groupName, groupDescription, player.getUniqueId());
-        if(!created) {
-            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("group-already-exists")
-                    .replace("%group%", groupName)));
-            return;
-        }
-        player.sendMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-creation-success")
-                .replace("%group%", groupName)));
-        //Todo: Perhaps auto focus the player.
-    }
-
-    private void deleteGroup(Player player, String[] args) {
-
-        if(!this.plugin.getChatGroupsManager().hasAccessTo(player, GroupChatPermissions.GROUPCHAT_DELETE)) {
-            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("not-allowed")));
-            return;
-        }
-
-        if(args.length < 2) {
-            player.sendMessage(GroupifyChat.translateColor(this.helpMessages.getString("group-delete")));
-            return;
-        }
-        String groupName = args[1];
-        GroupChat groupChat = this.plugin.getChatGroupsManager().getGroup(groupName);
-        if(groupChat == null)
-        {
-            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("group-not-exists")
-                    .replace("%group%", groupName)));
-            return;
-        }
-        if(!groupChat.canModify(player)) {
-            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("cannot-delete-group")
-                    .replace("%group%", groupName)));
-            return;
-        }
-        this.plugin.getChatGroupsManager().removeGroup(groupName);
-        player.sendMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-deleted")
-                .replace("%group%", groupName)));
-    }
-
-    private void leaveGroup(Player player, String[] args) {
-        if(args.length < 2) {
-            player.sendMessage(GroupifyChat.translateColor(this.helpMessages.getString("group-leave")));
-            return;
-        }
-        String groupName = args[1];
-        GroupChat groupChat = this.plugin.getChatGroupsManager().getGroup(groupName);
-        if(groupChat == null) {
-            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("group-not-exists")
-                    .replace("%group%", groupName)));
-            return;
-        }
-        if(!groupChat.hasMember(player.getUniqueId())) {
-            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("not-in-group")
-                    .replace("%group%", groupName)));
-            return;
-        }
-        if(groupChat.isOwner(player.getUniqueId())) {
-            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("cannot-leave-group-due-ownership")
-                    .replace("%group%", groupName)));
-            return;
-        }
-        this.plugin.getChatGroupsManager().removeGroup(groupName);
-        player.sendMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-member-left")
-                .replace("%group%", groupName)));
-        groupChat.sendGroupMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-member-leave")
-                .replace("%member%", player.getDisplayName())));
-    }
-
-    private void acceptGroup(Player player, String[] args) {
-    }
-
-    private void promoteMember(Player player, String[] args) {
-    }
-
-    private void focusGroup(Player player, String[] args) {
-    }
-
-    private void unFocusGroup(Player player) {
-    }
-
-    private void listGroups(Player player) {
-    }
-
     private void showHelp(Player player) {
 
         helpMessages.getValues(false).forEach((x, message) -> {
@@ -151,34 +52,34 @@ public final class GroupChatCommand implements CommandExecutor {
     private void handleArguments(String[] args, Player player) {
         switch (args[0]) {
             case "create":
-                this.groupCreate(player, args);
+                this.plugin.getChatGroupsManager().handleCreateCommand(player, args);
+                break;
+            case "delete":
+                this.plugin.getChatGroupsManager().handleDeleteCommand(player, args);
+                break;
+            case "leave":
+                this.plugin.getChatGroupsManager().handleLeaveCommand(player, args);
                 break;
             case "invite":
                 this.plugin.getGroupInvitationManager().handleInvitationCommand(player, args);
                 break;
             case "accept":
-                this.acceptGroup(player, args);
-                break;
-            case "delete":
-                this.deleteGroup(player, args);
-                break;
-            case "leave":
-                this.leaveGroup(player, args);
-                break;
-            case "promote":
-                this.promoteMember(player, args);
+                this.plugin.getGroupInvitationManager().handleAcceptCommand(player, args);
                 break;
             case "focus":
-                this.focusGroup(player, args);
+                this.plugin.getGroupFocusManager().handleFocusCommand(player, args);
                 break;
             case "unfocus":
-                this.unFocusGroup(player);
+                this.plugin.getGroupFocusManager().handleUnFocusCommand(player);
                 break;
             case "list":
-                this.listGroups(player);
+                this.plugin.getChatGroupsManager().handleListCommand(player);
+                break;
+            case "disband":
+                this.plugin.getChatGroupsManager().getGroupAdministrationManager().handleDisbandCommand(player);
                 break;
             default:
-                player.sendMessage("Invalid command usage!");
+                player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("invalid-command-usage")));
                 this.showHelp(player);
                 break;
         }

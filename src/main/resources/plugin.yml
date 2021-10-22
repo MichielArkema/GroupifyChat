@@ -1,7 +1,7 @@
 name: GroupifyChat
 version: '${project.version}'
 main: nl.michielarkema.groupifychat.GroupifyChat
-api-version: 1.17
+api-version: 1.13
 prefix: GroupifyChat
 author: Michiel Arkema
 description: Allows the creation of chat groups for people to talk in private.
@@ -11,7 +11,9 @@ commands:
   gc:
     usage: /gc - See list of command arguments.
     description: The groupchat command.
-    aliases: [groupchat]
+  gca:
+    usage: /gca - See list of group administration command arguments.
+    description: Commands for administrating groups.
 
 permissions:
   groupchat.create:

@@ -1,6 +1,7 @@
 package nl.michielarkema.groupifychat;
 
 import nl.michielarkema.groupifychat.commands.GroupChatCommand;
+import nl.michielarkema.groupifychat.managers.*;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,10 +26,12 @@ public final class GroupifyChat extends JavaPlugin {
         this.saveDefaultConfig();
         this.Config = this.getConfig();
 
-        this.chatGroupsManager = new GroupChatManager();
+        this.chatGroupsManager = new GroupChatManager(this);
         this.chatGroupsManager.loadData();
 
         this.groupInvitationManager = new GroupInvitationManager(this);
+
+        this.groupFocusManager = new GroupFocusManager(this);
 
         this.getServer().getPluginManager().registerEvents(new Events(), this);
 

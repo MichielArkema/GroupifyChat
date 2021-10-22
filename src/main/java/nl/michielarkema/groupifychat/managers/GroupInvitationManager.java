@@ -1,13 +1,14 @@
-package nl.michielarkema.groupifychat;
+package nl.michielarkema.groupifychat.managers;
 
+import nl.michielarkema.groupifychat.GroupifyChat;
 import nl.michielarkema.groupifychat.objects.GroupChat;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.UUID;
 
 public final class GroupInvitationManager {
@@ -19,7 +20,7 @@ public final class GroupInvitationManager {
     private final ConfigurationSection helpMessages;
     private final ConfigurationSection errorMessages;
 
-    private final Dictionary<UUID, String> groupInvitations = new Hashtable<>();
+    private final Map<UUID, String> groupInvitations = new Hashtable<>();
 
     public GroupInvitationManager(GroupifyChat plugin) {
         this.plugin = plugin;
@@ -79,5 +80,18 @@ public final class GroupInvitationManager {
 
         target.sendMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-invite-received")));
         this.plugin.getGroupInvitationManager().addInvitation(target.getUniqueId(), groupChat.Settings.Name);
+    }
+
+    public void handleAcceptCommand(Player player, String[] args) {
+        if(!this.groupInvitations.containsKey(player.getUniqueId())) {
+            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("no-incoming-invitation")));
+            return;
+        }
+        UUID id = player.getUniqueId();
+        GroupChat groupChat = this.plugin.getChatGroupsManager().getGroup(this.groupInvitations.get(id));
+        groupChat.sendGroupMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-member-joined")
+                .replace("%member%", player.getDisplayName())));
+        groupChat.addMember(id);
+        this.groupInvitations.remove(id);
     }
 }
