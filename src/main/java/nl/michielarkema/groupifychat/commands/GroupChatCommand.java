@@ -1,6 +1,9 @@
 package nl.michielarkema.groupifychat.commands;
 
 import nl.michielarkema.groupifychat.GroupifyChat;
+import nl.michielarkema.groupifychat.managers.GroupChatManager;
+import nl.michielarkema.groupifychat.managers.GroupFocusManager;
+import nl.michielarkema.groupifychat.managers.GroupInvitationManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -50,33 +53,37 @@ public final class GroupChatCommand implements CommandExecutor {
     }
 
     private void handleArguments(String[] args, Player player) {
+        GroupChatManager chatGroupsManager = this.plugin.getChatGroupsManager();
+        GroupInvitationManager groupInvitationManager = this.plugin.getGroupInvitationManager();
+        GroupFocusManager groupFocusManager = this.plugin.getGroupFocusManager();
+
         switch (args[0]) {
             case "create":
-                this.plugin.getChatGroupsManager().handleCreateCommand(player, args);
+                chatGroupsManager.handleCreateCommand(player, args);
                 break;
             case "delete":
-                this.plugin.getChatGroupsManager().handleDeleteCommand(player, args);
+                chatGroupsManager.handleDeleteCommand(player, args);
                 break;
             case "leave":
-                this.plugin.getChatGroupsManager().handleLeaveCommand(player, args);
+                chatGroupsManager.handleLeaveCommand(player, args);
                 break;
             case "invite":
-                this.plugin.getGroupInvitationManager().handleInvitationCommand(player, args);
+                groupInvitationManager.handleInvitationCommand(player, args);
                 break;
             case "accept":
-                this.plugin.getGroupInvitationManager().handleAcceptCommand(player, args);
+                groupInvitationManager.handleAcceptCommand(player, args);
                 break;
             case "focus":
-                this.plugin.getGroupFocusManager().handleFocusCommand(player, args);
+                groupFocusManager.handleFocusCommand(player, args);
                 break;
             case "unfocus":
-                this.plugin.getGroupFocusManager().handleUnFocusCommand(player);
+                groupFocusManager.handleUnFocusCommand(player);
                 break;
             case "list":
-                this.plugin.getChatGroupsManager().handleListCommand(player);
+                chatGroupsManager.handleListCommand(player);
                 break;
             case "disband":
-                this.plugin.getChatGroupsManager().getGroupAdministrationManager().handleDisbandCommand(player);
+                chatGroupsManager.getGroupAdministrationManager().handleDisbandCommand(player);
                 break;
             default:
                 player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("invalid-command-usage")));
