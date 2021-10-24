@@ -39,6 +39,13 @@ public final class GroupFocusManager {
 
     public boolean isFocused(UUID playerId) {
         return this.focusedMap.containsKey(playerId);
+        //return this.focusedMap.keySet().stream().anyMatch(x -> x.equals(playerId));
+    }
+
+    public boolean isFocusedOn(UUID playerId, String groupName) {
+       if(!this.focusedMap.containsKey(playerId))
+           return false;
+       return this.focusedMap.get(playerId).equals(groupName);
     }
 
     public GroupChat getFocusedGroupChat(UUID playerId) {
@@ -46,7 +53,6 @@ public final class GroupFocusManager {
         String groupName = this.focusedMap.get(playerId);
         return GroupifyChat.getInstance().getChatGroupsManager().getGroup(groupName);
     }
-
 
     public void handleFocusCommand(Player player, String[] args) {
         if(args.length < 2) {
@@ -65,7 +71,7 @@ public final class GroupFocusManager {
             player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("not-in-group")));
             return;
         }
-        this.focusedMap.put(id, groupName);
+        this.focusGroup(id, groupName);
         player.sendMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.eventMessages.getString("group-focused"))
                 .replace("%group%", groupName)));
     }

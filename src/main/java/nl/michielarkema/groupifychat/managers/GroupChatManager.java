@@ -15,11 +15,11 @@ import java.io.File;
 import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class GroupChatManager {
 
     private final GroupifyChat plugin;
-    private final GroupAdministrationManager groupAdministrationManager;
 
     private final ConfigurationSection eventMessages;
     private final ConfigurationSection helpMessages;
@@ -30,14 +30,9 @@ public final class GroupChatManager {
 
     private HashSet<GroupChat> chatGroups = new HashSet<>();
 
-    public GroupAdministrationManager getGroupAdministrationManager() {
-        return groupAdministrationManager;
-    }
-
     public GroupChatManager(GroupifyChat plugin) {
         this.plugin = plugin;
         FileConfiguration config = plugin.getConfig();
-        this.groupAdministrationManager = new GroupAdministrationManager(this.plugin, this);
 
         this.eventMessages = config.getConfigurationSection("event-messages");
         this.helpMessages = config.getConfigurationSection("help-messages");
@@ -72,6 +67,10 @@ public final class GroupChatManager {
         return this.chatGroups.stream().anyMatch(x -> x.Settings.Name.equals(name));
     }
 
+    public List<GroupChat> getPlayerGroups(UUID playerId) {
+        return this.chatGroups.stream().filter(g ->g.isOwner(playerId)).collect(Collectors.toList());
+    }
+
     public boolean hasAccessTo(Player player, String permission) {
         if(GroupifyChat.getInstance().getConfig().getBoolean("allow-players")) {
             return true;
@@ -97,7 +96,6 @@ public final class GroupChatManager {
         }
     }
 
-
     public void saveData() {
         try {
             String json = gson.toJson(this.chatGroups);
@@ -107,7 +105,6 @@ public final class GroupChatManager {
            Bukkit.getLogger().warning("[GroupifyChat] Failed to save group data due to exception: " + ex);
        }
     }
-    
 
     public void handleCreateCommand(Player player, String[] args) {
         if(!this.plugin.getChatGroupsManager().hasAccessTo(player, GroupChatPermissions.GROUPCHAT_CREATE)) {
@@ -119,6 +116,12 @@ public final class GroupChatManager {
             player.sendMessage(GroupifyChat.translateColor(this.helpMessages.getString("group-create")));
             return;
         }
+
+        if(this.getPlayerGroups(player.getUniqueId()).size() == this.plugin.getConfig().getInt("max-user-groups")) {
+            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("reached-max-groups")));
+            return;
+        }
+
         String groupName = args[1];
         String groupDescription = args[2];
         boolean created = this.plugin.getChatGroupsManager().createGroup(groupName, groupDescription, player.getUniqueId());
@@ -133,29 +136,28 @@ public final class GroupChatManager {
     }
 
     public void handleDeleteCommand(Player player, String[] args) {
-        if(!this.plugin.getChatGroupsManager().hasAccessTo(player, GroupChatPermissions.GROUPCHAT_DELETE)) {
+        if(!this.hasAccessTo(player, GroupChatPermissions.GROUPCHAT_DELETE)) {
             player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("not-allowed")));
             return;
         }
-
         if(args.length < 2) {
             player.sendMessage(GroupifyChat.translateColor(this.helpMessages.getString("group-delete")));
             return;
         }
         String groupName = args[1];
-        GroupChat groupChat = this.plugin.getChatGroupsManager().getGroup(groupName);
+        GroupChat groupChat = this.getGroup(groupName);
         if(groupChat == null)
         {
             player.sendMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.errorMessages.getString("group-not-exists"))
                     .replace("%group%", groupName)));
             return;
         }
-        if(!groupChat.canModify(player)) {
+        if(!groupChat.canDelete(player)) {
             player.sendMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.errorMessages.getString("cannot-delete-group"))
                     .replace("%group%", groupName)));
             return;
         }
-        this.plugin.getChatGroupsManager().removeGroup(groupName);
+        this.removeGroup(groupName);
         player.sendMessage(GroupifyChat.translateColor(Objects.requireNonNull(this.eventMessages.getString("group-deleted"))
                 .replace("%group%", groupName)));
     }
@@ -198,8 +200,8 @@ public final class GroupChatManager {
         for (int i = 0; i < groups.length; i++) {
             GroupChat group = (GroupChat)groups[i];
             int number = i + 1;
-            player.sendMessage(MessageFormat.format("{0} - {1} ({2})", number, group.Settings.Name, group.Settings.Description));
+            String message = MessageFormat.format("{0} - {1} ({2})", number, group.Settings.Name, group.Settings.Description);
+            player.sendMessage(message);
         }
     }
-
 }

@@ -9,15 +9,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.world.WorldSaveEvent;
 
-import java.text.MessageFormat;
 import java.util.UUID;
 
 public class EventListener implements Listener {
 
     private final GroupifyChat plugin;
+    private final String groupMessage;
 
     public EventListener(GroupifyChat plugin) {
         this.plugin = plugin;
+        this.groupMessage = plugin.getConfig().getConfigurationSection("event-messages").getString("group-message");
     }
 
     @EventHandler
@@ -40,9 +41,13 @@ public class EventListener implements Listener {
             groupFocusManager.unFocusGroup(id);
             return;
         }
-        String message = MessageFormat.format("[{0}] {1}: {2}", groupChat.Settings.Name, player.getDisplayName(), ev.getMessage());
+        String message = GroupifyChat.translateColor(this.groupMessage
+                .replace("%group%", groupChat.Settings.Name)
+                .replace("%player%", player.getDisplayName())
+                .replace("%message%", ev.getMessage()));
         groupChat.sendGroupMessage(message);
 
+        Bukkit.getLogger().info("onPlayerChat yesssss.");
         ev.setCancelled(true);
     }
 }

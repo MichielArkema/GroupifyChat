@@ -47,18 +47,22 @@ public final class GroupInvitationManager {
         return GroupifyChat.getInstance().getChatGroupsManager().getGroup(this.groupInvitations.get(playerId));
     }
 
-
     public void handleInvitationCommand(Player player, String[] args) {
         if(args.length < 2) {
             player.sendMessage(GroupifyChat.translateColor(this.helpMessages.getString("group-invite")));
             return;
         }
+
         GroupChat groupChat = this.plugin.getGroupFocusManager().getFocusedGroupChat(player.getUniqueId());
         if(groupChat == null) {
             player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("not-focused")));
             return;
         }
 
+        if(groupChat.Members.size() == this.plugin.getConfig().getInt("max-group-members")) {
+            player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("group-full")));
+            return;
+        }
         Player target = Bukkit.getPlayer(args[1]);
         if(target == null) {
             player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("player-not-found")));
@@ -66,6 +70,8 @@ public final class GroupInvitationManager {
         }
         if(target.getUniqueId().equals(player.getUniqueId()))
             return;
+
+        if()
 
         if(this.plugin.getGroupInvitationManager().hasInvitation(target.getUniqueId())) {
             //Todo: Send a message that the target player already has incoming invitation.
@@ -78,7 +84,9 @@ public final class GroupInvitationManager {
                 .replace("%target%", target.getDisplayName())
                 .replace("%group%", groupChat.Settings.Name)));
 
-        target.sendMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-invite-received")));
+        target.sendMessage(GroupifyChat.translateColor(this.eventMessages.getString("group-invite-received"))
+                .replace("%sender%", player.getDisplayName())
+                .replace("%group%", groupChat.Settings.Name));
         this.plugin.getGroupInvitationManager().addInvitation(target.getUniqueId(), groupChat.Settings.Name);
     }
 

@@ -1,6 +1,8 @@
 package nl.michielarkema.groupifychat.objects;
 
+import nl.michielarkema.groupifychat.GroupChatPermissions;
 import nl.michielarkema.groupifychat.GroupifyChat;
+import nl.michielarkema.groupifychat.managers.GroupFocusManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -31,18 +33,34 @@ public final class GroupChat {
         return this.Members.remove(memberUUID);
     }
 
-    public boolean canModify(Player player) {
+    public boolean canDelete(Player player) {
         return player.isOp()
-                || this.isOwner(player.getUniqueId());
-                //|| GroupifyChat.getInstance().getChatGroupsManager().canDelete(this, player);
+                || this.isOwner(player.getUniqueId())
+                || player.hasPermission(GroupChatPermissions.GROUPCHAT_DELETE);
     }
 
-    public void sendGroupMessage(String message) {
 
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if(this.hasMember(onlinePlayer.getUniqueId())) {
-                onlinePlayer.sendMessage(message);
-            }
+    public void focusMember(UUID id) {
+        if(!this.hasMember(id))
+            return;
+    }
+
+
+    //Todo: This method contains new code that still needs to get tested.
+    public void sendGroupMessage(String message) {
+        GroupFocusManager focusManager = GroupifyChat.getInstance().getGroupFocusManager();
+
+        for (UUID uuid : this.Members) {
+            Player member = Bukkit.getPlayer(uuid);
+            Bukkit.getLogger().info("sendGroupMessage 1.");
+            if(member == null)
+                continue;
+            Bukkit.getLogger().info("sendGroupMessage 2.");
+            if(!focusManager.isFocusedOn(uuid, this.Settings.Name))
+                continue;
+
+            member.sendMessage(message);
+            Bukkit.getLogger().info("sendGroupMessage yesssss.");
         }
     }
 

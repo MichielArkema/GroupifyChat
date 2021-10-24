@@ -4,12 +4,14 @@ import nl.michielarkema.groupifychat.GroupifyChat;
 import nl.michielarkema.groupifychat.managers.GroupChatManager;
 import nl.michielarkema.groupifychat.managers.GroupFocusManager;
 import nl.michielarkema.groupifychat.managers.GroupInvitationManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 public final class GroupChatCommand implements CommandExecutor {
 
@@ -77,9 +79,6 @@ public final class GroupChatCommand implements CommandExecutor {
                 break;
             case "list":
                 chatGroupsManager.handleListCommand(player);
-                break;
-            case "disband":
-                chatGroupsManager.getGroupAdministrationManager().handleDisbandCommand(player);
                 break;
             default:
                 player.sendMessage(GroupifyChat.translateColor(this.errorMessages.getString("invalid-command-usage")));

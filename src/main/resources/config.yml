@@ -18,9 +18,10 @@ event-messages:
   group-member-left: "You've left the group %group%."
   group-member-kicked: "%member% has been kicked from the group by %executor%"
   group-member-promoted: "%member% has been promoted to group admin."
-  group-full: "The group is full."
   group-focused: "You are now focused on group %group%."
   group-unfocused: "You are now unfocused from group %group%.."
+  group-message: "&e[%group%] &9%player%: &d%message%"
+
 
 #help messages.
 help-messages:
@@ -37,13 +38,15 @@ help-messages:
 error-messages:
   invalid-command-usage: "&cInvalid command usage!"
   not-allowed: "&cYou are not allowed to use this command."
+  group-full: "The group is full."
   group-already-exists: "&cThe group '%group%' already exists."
-  group-not-exists: "&cThe group '%group%' does not exists."
+  group-not-exists: "&cThis group does not exists."
   not-in-group: "&cYou are not a member of this group!"
   cannot-create-group: "&cYou are not allowed to create groups."
   cannot-delete-group: "&cYou are not allowed to delete the group '%group%'"
-  cannot-leave-group-due-ownership: "You cannot leave a group that you own. Use the '/gc disband %group%' instead."
+  cannot-leave-group-due-ownership: "You cannot leave a group that you own. Use the '/gc delete %group%' instead."
   not-focused: "&cYou are not focused on any group."
   player-not-found: "&cCouldn't find the target user."
   player-has-invitation: "&c%player% already has a incoming invitation."
   no-incoming-invitation: "&cYou don't have any incoming invitation."
+  reached-max-groups: "&cYou've reached the maximum amount of groups."
